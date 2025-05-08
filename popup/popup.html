@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Auto-Responder</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>YouTube Auto-Responder</h1>
+      <div class="toggle-container">
+        <label class="switch">
+          <input type="checkbox" id="enabled-toggle">
+          <span class="slider round"></span>
+        </label>
+        <span id="status-text">Disabled</span>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <nav class="tabs">
+        <button class="tab-button active" data-tab="main-tab">Main</button>
+        <button class="tab-button" data-tab="advanced-tab">Advanced</button>
+        <button class="tab-button" data-tab="test-tab">Test</button>
+        <button class="tab-button" data-tab="stats-tab">Stats</button>
+      </nav>
+
+      <div id="main-tab" class="tab-content active">
+        <section class="auth-section">
+          <h2>Authentication</h2>
+          <div id="auth-status" class="status-indicator">
+            <span class="status-dot not-authorized"></span>
+            <span class="status-text">Not authorized with YouTube</span>
+          </div>
+          <button id="auth-button" class="primary-button">Authorize with YouTube</button>
+        </section>
+
+        <section class="api-keys">
+          <h2>API Keys</h2>
+          <div class="form-group">
+            <label for="youtube-api-key">YouTube API Key</label>
+            <input type="password" id="youtube-api-key" placeholder="Enter YouTube API Key">
+            <button id="toggle-youtube-key" class="icon-button">👁️</button>
+          </div>
+          <div class="form-group">
+            <label for="gemini-api-key">Gemini AI API Key</label>
+            <input type="password" id="gemini-api-key" placeholder="Enter Gemini AI API Key">
+            <button id="toggle-gemini-key" class="icon-button">👁️</button>
+          </div>
+          <button id="save-keys" class="primary-button">Save Keys</button>
+        </section>
+
+        <section class="video-targets">
+          <h2>Target Videos</h2>
+          <div class="form-group">
+            <label for="video-id">YouTube Video ID</label>
+            <div class="input-group">
+              <input type="text" id="video-id" placeholder="Enter video ID (e.g., dQw4w9WgXcQ)">
+              <button id="add-video" class="secondary-button">Add</button>
+            </div>
+            <button id="add-current-video" class="text-button">Add current video</button>
+          </div>
+          <div class="video-list" id="video-list">
+            <!-- Video items will be added here dynamically -->
+            <div class="empty-state">No target videos added yet</div>
+          </div>
+        </section>
+
+        <section class="response-settings">
+          <h2>Response Settings</h2>
+          <div class="form-group">
+            <label for="response-style">Response Style</label>
+            <select id="response-style">
+              <option value="friendly">Friendly</option>
+              <option value="professional">Professional</option>
+              <option value="humorous">Humorous</option>
+              <option value="informative">Informative</option>
+              <option value="supportive">Supportive</option>
+              <option value="enthusiastic">Enthusiastic</option>
+              <option value="concise">Concise</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="response-delay">Response Delay (seconds)</label>
+            <input type="number" id="response-delay" min="10" max="600" value="60">
+          </div>
+          <div class="form-group">
+            <label for="keyword-filter">Keyword Filters (optional)</label>
+            <div class="input-group">
+              <input type="text" id="keyword-filter" placeholder="Add keyword to filter comments">
+              <button id="add-keyword" class="secondary-button">Add</button>
+            </div>
+          </div>
+          <div class="keyword-list" id="keyword-list">
+            <!-- Keyword items will be added here dynamically -->
+            <div class="empty-state">No keywords added. All comments will be processed.</div>
+          </div>
+        </section>
+      </div>
+
+      <div id="advanced-tab" class="tab-content">
+        <section class="advanced-settings">
+          <h2>Advanced Settings</h2>
+          
+          <div class="form-group">
+            <div class="checkbox-group">
+              <input type="checkbox" id="sentiment-analysis" checked>
+              <label for="sentiment-analysis">Enable sentiment analysis</label>
+            </div>
+            <p class="help-text">Analyze comment sentiment to provide more appropriate responses</p>
+          </div>
+          
+          <div class="form-group">
+            <div class="checkbox-group">
+              <input type="checkbox" id="auto-moderation" checked>
+              <label for="auto-moderation">Auto-moderation</label>
+            </div>
+            <p class="help-text">Skip comments with inappropriate content</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="blacklisted-words">Blacklisted Words</label>
+            <textarea id="blacklisted-words" placeholder="Enter words separated by commas">spam, scam, hack</textarea>
+            <p class="help-text">Comments containing these words will be skipped</p>
+          </div>
+          
+          <div class="form-group">
+            <div class="checkbox-group">
+              <input type="checkbox" id="randomize-delay" checked>
+              <label for="randomize-delay">Randomize delay</label>
+            </div>
+            <p class="help-text">Add slight randomness to response times to appear more human</p>
+          </div>
+          
+          <div class="form-group">
+            <div class="checkbox-group">
+              <input type="checkbox" id="prioritize-questions" checked>
+              <label for="prioritize-questions">Prioritize questions</label>
+            </div>
+            <p class="help-text">Answer questions before other comments</p>
+          </div>
+          
+          <div class="form-group">
+            <div class="checkbox-group">
+              <input type="checkbox" id="remember-commenters" checked>
+              <label for="remember-commenters">Remember commenters</label>
+            </div>
+            <p class="help-text">Track history of users you've replied to before</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="custom-introduction">Custom Introduction (Optional)</label>
+            <input type="text" id="custom-introduction" placeholder="Thanks for your comment!">
+            <p class="help-text">Starting text for your responses (variations will be used)</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="max-daily-responses">Maximum Daily Responses</label>
+            <input type="number" id="max-daily-responses" min="1" max="1000" value="50">
+            <p class="help-text">Limit the number of responses per day</p>
+          </div>
+        </section>
+      </div>
+
+      <div id="test-tab" class="tab-content">
+        <section class="test-ai">
+          <h2>Test AI Response</h2>
+          <div class="form-group">
+            <label for="test-comment">Enter a sample comment</label>
+            <textarea id="test-comment" placeholder="Type a comment here to test the AI response"></textarea>
+          </div>
+          <button id="generate-test" class="primary-button">Generate Response</button>
+          
+          <div id="test-result" class="result-container hidden">
+            <h3>AI Response:</h3>
+            <div class="sentiment-badge">Sentiment: <span id="sentiment-value">Neutral</span></div>
+            <div class="response-box" id="ai-response"></div>
+          </div>
+        </section>
+      </div>
+
+      <div id="stats-tab" class="tab-content">
+        <section class="statistics">
+          <h2>Response Statistics</h2>
+          
+          <div class="stats-card">
+            <div class="stat-item">
+              <h3>Today</h3>
+              <div class="stat-value" id="today-count">0</div>
+              <div class="stat-label">Responses</div>
+            </div>
+            
+            <div class="stat-item">
+              <h3>Total Generated</h3>
+              <div class="stat-value" id="total-generated">0</div>
+              <div class="stat-label">Responses</div>
+            </div>
+            
+            <div class="stat-item">
+              <h3>Total Posted</h3>
+              <div class="stat-value" id="total-posted">0</div>
+              <div class="stat-label">Responses</div>
+            </div>
+          </div>
+          
+          <button id="reset-stats" class="secondary-button">Reset Statistics</button>
+          
+          <h3>Comment History</h3>
+          <div id="comment-history" class="history-container">
+            <div class="empty-state">No comment history yet</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <footer>
+      <button id="save-settings" class="primary-button">Save All Settings</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 
